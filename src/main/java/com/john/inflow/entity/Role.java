@@ -2,6 +2,7 @@ package com.john.inflow.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Set;
@@ -20,6 +21,7 @@ public class Role {
 
     @NotBlank
     @Column(nullable = false, unique = true)
+    @Size(max = 255)
     private String name;
 
     @OneToMany(mappedBy = "role")

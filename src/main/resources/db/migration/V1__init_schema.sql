@@ -17,7 +17,7 @@ CREATE TABLE users(
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     user_role INTEGER REFERENCES roles(id) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     left_at TIMESTAMP WITH TIME ZONE
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE warehouses(
     id SERIAL PRIMARY KEY,
     address VARCHAR(255) NOT NULL UNIQUE,
     is_central BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE customers(
@@ -56,7 +56,7 @@ CREATE TABLE sales_invoices(
     user_id INTEGER REFERENCES users(id) NOT NULL,
     customer_id INTEGER REFERENCES customers(id) NOT NULL,
     warehouse_id INTEGER REFERENCES warehouses(id) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total_price DECIMAL(12, 2) NOT NULL CHECK (total_price >= 0),
     discount DECIMAL (12, 2) DEFAULT 0.00 CHECK (discount >= 0)
 );
@@ -67,7 +67,7 @@ CREATE TABLE return_sales_invoices(
     sales_invoice_id INTEGER REFERENCES sales_invoices(id),
     customer_id INTEGER REFERENCES customers(id) NOT NULL,
     warehouse_id INTEGER REFERENCES warehouses(id) NOT NULL,
-    returned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    returned_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total_price DECIMAL(12, 2) NOT NULL CHECK (total_price >= 0),
     reason TEXT
 );
@@ -77,7 +77,7 @@ CREATE TABLE purchase_invoices(
     user_id INTEGER REFERENCES users(id) NOT NULL,
     supplier_id INTEGER REFERENCES suppliers(id) NOT NULL,
     warehouse_id INTEGER REFERENCES warehouses(id) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total_price DECIMAL(12, 2) NOT NULL CHECK (total_price >= 0)
 );
 
@@ -87,7 +87,7 @@ CREATE TABLE return_purchase_invoices(
     purchase_invoice_id INTEGER REFERENCES purchase_invoices(id),
     supplier_id INTEGER REFERENCES suppliers(id) NOT NULL,
     warehouse_id INTEGER REFERENCES warehouses(id) NOT NULL,
-    returned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    returned_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total_price DECIMAL(12, 2) NOT NULL CHECK (total_price >= 0),
     reason TEXT
 );
@@ -97,7 +97,7 @@ CREATE TABLE internal_invoices(
     user_id INTEGER REFERENCES users(id),
     source_warehouse_id INTEGER REFERENCES warehouses(id) NOT NULL,
     destination_warehouse_id INTEGER REFERENCES warehouses(id) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CHECK (source_warehouse_id <> destination_warehouse_id)
 );
 

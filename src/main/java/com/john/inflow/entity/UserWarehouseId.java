@@ -22,7 +22,7 @@ public class UserWarehouseId implements Serializable {
     private Integer warehouseId;
 
     @Column(name = "assigned_at")
-    private OffsetDateTime assignedAt;
+    private OffsetDateTime assignedAt = OffsetDateTime.now();
 
     @Override
     public boolean equals(Object o) {
