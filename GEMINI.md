@@ -14,9 +14,10 @@
 
 ### Architecture
 The project follows a standard Spring Boot layered architecture:
+- **Controllers:** Located in `com.john.inflow.controller`.
+- **Services:** Located in `com.john.inflow.service`.
 - **Entities:** Located in `com.john.inflow.entity`.
 - **DTOs:** Located in `com.john.inflow.dto` (`request` and `response` subpackages). Implemented as immutable Java `record`s.
-- **Mappers:** Located in `com.john.inflow.mapper` as `@Component` beans for manual mapping between entities and DTOs.
 - **Repositories:** Located in `com.john.inflow.repository`, extending `JpaRepository` for data access.
 - **Database Schema:** Managed via Flyway migrations in `src/main/resources/db/migration/`.
 - **Validation:** Uses Jakarta Bean Validation (`@NotBlank`, `@NotNull`, etc.) within entities and DTOs.
@@ -60,7 +61,7 @@ The application uses `src/main/resources/application.properties`.
 ### Coding Style
 - Follow standard Java naming conventions (CamelCase).
 - Use **Lombok** for entity classes to reduce boilerplate (`@Getter`, `@Setter`, `@Builder`, etc.).
-- Use **Java Records** for all DTOs (Data Transfer Objects). Do not use Lombok on records.
+- Use **Java Records** for all DTOs (Data Transfer Objects). Suffix DTO names with `Request` or `Response` (do not use `DTO` as a suffix). Do not use Lombok on records.
 - Prefer **constructor injection** for dependencies.
 
 ### Persistence & Migrations
