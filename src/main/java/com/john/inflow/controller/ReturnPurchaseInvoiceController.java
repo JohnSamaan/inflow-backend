@@ -44,4 +44,10 @@ public class ReturnPurchaseInvoiceController {
     public ResponseEntity<List<ReturnPurchaseInvoiceResponse>> getAll() {
         return ResponseEntity.ok(returnPurchaseInvoiceService.getAll());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        returnPurchaseInvoiceService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

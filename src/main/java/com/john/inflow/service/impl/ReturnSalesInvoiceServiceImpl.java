@@ -120,6 +120,13 @@ public class ReturnSalesInvoiceServiceImpl implements ReturnSalesInvoiceService 
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+        var entity = returnSalesInvoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("ReturnSalesInvoice", id));
+        returnSalesInvoiceRepository.delete(entity);
+    }
+
     private void addStock(Product product, Warehouse warehouse, int amount) {
         ProductWarehouseId pwId = new ProductWarehouseId(product.getId(), warehouse.getId());
         ProductWarehouse pw = productWarehouseRepository.findById(pwId).orElse(null);

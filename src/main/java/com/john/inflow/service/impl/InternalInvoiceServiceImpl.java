@@ -102,6 +102,13 @@ public class InternalInvoiceServiceImpl implements InternalInvoiceService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+        var entity = internalInvoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("InternalInvoice", id));
+        internalInvoiceRepository.delete(entity);
+    }
+
     private void addStock(Product product, Warehouse warehouse, int amount) {
         ProductWarehouseId pwId = new ProductWarehouseId(product.getId(), warehouse.getId());
         ProductWarehouse pw = productWarehouseRepository.findById(pwId).orElse(null);

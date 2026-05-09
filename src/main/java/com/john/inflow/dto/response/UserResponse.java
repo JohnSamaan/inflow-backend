@@ -9,7 +9,7 @@ public record UserResponse(
     String lastName,
     String phoneNumber,
     String email,
-    RoleResponse role,
+    String roleName,
     OffsetDateTime createdAt,
     OffsetDateTime leftAt
 ) {}

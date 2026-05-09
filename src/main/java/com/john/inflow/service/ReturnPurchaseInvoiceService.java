@@ -9,4 +9,5 @@ public interface ReturnPurchaseInvoiceService {
     ReturnPurchaseInvoiceResponse create(CreateReturnPurchaseInvoiceRequest request, Integer userId);
     ReturnPurchaseInvoiceResponse getById(Integer id);
     List<ReturnPurchaseInvoiceResponse> getAll();
+    void delete(Integer id);
 }

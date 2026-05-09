@@ -9,4 +9,5 @@ public interface ReturnSalesInvoiceService {
     ReturnSalesInvoiceResponse create(CreateReturnSalesInvoiceRequest request, Integer userId);
     ReturnSalesInvoiceResponse getById(Integer id);
     List<ReturnSalesInvoiceResponse> getAll();
+    void delete(Integer id);
 }

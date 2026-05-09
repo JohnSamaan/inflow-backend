@@ -1,16 +1,27 @@
 package com.john.inflow.service.impl;
 
 import com.john.inflow.dto.request.WarehouseRequest;
+import com.john.inflow.dto.response.ProductWarehouseResponse;
+import com.john.inflow.dto.response.UserResponse;
 import com.john.inflow.dto.response.WarehouseResponse;
+import com.john.inflow.entity.UserWarehouse;
+import com.john.inflow.entity.UserWarehouseId;
 import com.john.inflow.entity.Warehouse;
+import com.john.inflow.entity.User;
 import com.john.inflow.exception.DuplicateResourceException;
 import com.john.inflow.exception.ResourceNotFoundException;
+import com.john.inflow.mapper.ProductWarehouseMapper;
+import com.john.inflow.mapper.UserMapper;
 import com.john.inflow.mapper.WarehouseMapper;
+import com.john.inflow.repository.ProductWarehouseRepository;
+import com.john.inflow.repository.UserRepository;
+import com.john.inflow.repository.UserWarehouseRepository;
 import com.john.inflow.repository.WarehouseRepository;
 import com.john.inflow.service.WarehouseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -19,10 +30,23 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final WarehouseMapper warehouseMapper;
+    private final ProductWarehouseRepository productWarehouseRepository;
+    private final ProductWarehouseMapper productWarehouseMapper;
+    private final UserWarehouseRepository userWarehouseRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, WarehouseMapper warehouseMapper) {
+    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, WarehouseMapper warehouseMapper,
+                                ProductWarehouseRepository productWarehouseRepository, ProductWarehouseMapper productWarehouseMapper,
+                                UserWarehouseRepository userWarehouseRepository, UserRepository userRepository,
+                                UserMapper userMapper) {
         this.warehouseRepository = warehouseRepository;
         this.warehouseMapper = warehouseMapper;
+        this.productWarehouseRepository = productWarehouseRepository;
+        this.productWarehouseMapper = productWarehouseMapper;
+        this.userWarehouseRepository = userWarehouseRepository;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -75,6 +99,47 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse", id));
         warehouseRepository.delete(warehouse);
+    }
+
+    @Override
+    public List<ProductWarehouseResponse> getWarehouseProducts(Integer warehouseId) {
+        return productWarehouseRepository.findByWarehouseId(warehouseId).stream()
+                .map(productWarehouseMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<UserResponse> getWarehouseUsers(Integer warehouseId) {
+        return userWarehouseRepository.findByWarehouseIdAndLeftAtIsNull(warehouseId).stream()
+                .map(uw -> userMapper.toResponse(uw.getUser()))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void assignUser(Integer warehouseId, Integer userId) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse", warehouseId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+
+        UserWarehouseId id = new UserWarehouseId(userId, warehouseId);
+        UserWarehouse uw = userWarehouseRepository.findById(id).orElse(new UserWarehouse());
+        uw.setId(id);
+        uw.setUser(user);
+        uw.setWarehouse(warehouse);
+        uw.setLeftAt(null);
+        userWarehouseRepository.save(uw);
+    }
+
+    @Override
+    @Transactional
+    public void removeUser(Integer warehouseId, Integer userId) {
+        UserWarehouseId id = new UserWarehouseId(userId, warehouseId);
+        userWarehouseRepository.findById(id).ifPresent(uw -> {
+            uw.setLeftAt(OffsetDateTime.now());
+            userWarehouseRepository.save(uw);
+        });
     }
 
     private WarehouseRequest withDefaults(WarehouseRequest request) {

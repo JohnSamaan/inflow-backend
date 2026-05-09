@@ -121,6 +121,13 @@ public class ReturnPurchaseInvoiceServiceImpl implements ReturnPurchaseInvoiceSe
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+        var entity = returnPurchaseInvoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("ReturnPurchaseInvoice", id));
+        returnPurchaseInvoiceRepository.delete(entity);
+    }
+
     private void removeStock(Product product, Warehouse warehouse, int requested) {
         ProductWarehouseId pwId = new ProductWarehouseId(product.getId(), warehouse.getId());
         ProductWarehouse pw = productWarehouseRepository.findById(pwId).orElse(null);

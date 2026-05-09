@@ -111,6 +111,13 @@ public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+        var entity = purchaseInvoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("PurchaseInvoice", id));
+        purchaseInvoiceRepository.delete(entity);
+    }
+
     private void addStock(Product product, Warehouse warehouse, int amount) {
         ProductWarehouseId pwId = new ProductWarehouseId(product.getId(), warehouse.getId());
         ProductWarehouse pw = productWarehouseRepository.findById(pwId).orElse(null);

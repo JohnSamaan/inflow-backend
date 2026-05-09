@@ -9,4 +9,5 @@ public interface PurchaseInvoiceService {
     PurchaseInvoiceResponse create(CreatePurchaseInvoiceRequest request, Integer userId);
     PurchaseInvoiceResponse getById(Integer id);
     List<PurchaseInvoiceResponse> getAll();
+    void delete(Integer id);
 }

@@ -52,7 +52,7 @@ public class UserMapper {
                 user.getLastName(),
                 user.getPhoneNumber(),
                 user.getEmail(),
-                user.getRole() != null ? roleMapper.toResponse(user.getRole()) : null,
+                user.getRole() != null ? user.getRole().getName() : null,
                 user.getCreatedAt(),
                 user.getLeftAt()
         );

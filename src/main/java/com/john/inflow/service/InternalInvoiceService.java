@@ -9,4 +9,5 @@ public interface InternalInvoiceService {
     InternalInvoiceResponse create(CreateInternalInvoiceRequest request, Integer userId);
     InternalInvoiceResponse getById(Integer id);
     List<InternalInvoiceResponse> getAll();
+    void delete(Integer id);
 }

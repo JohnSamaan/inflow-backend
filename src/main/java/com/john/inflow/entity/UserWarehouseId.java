@@ -24,6 +24,12 @@ public class UserWarehouseId implements Serializable {
     @Column(name = "assigned_at")
     private OffsetDateTime assignedAt = OffsetDateTime.now();
 
+    public UserWarehouseId(Integer userId, Integer warehouseId) {
+        this.userId = userId;
+        this.warehouseId = warehouseId;
+        this.assignedAt = OffsetDateTime.now();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

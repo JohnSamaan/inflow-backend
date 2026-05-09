@@ -118,6 +118,13 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+        var entity = salesInvoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("SalesInvoice", id));
+        salesInvoiceRepository.delete(entity);
+    }
+
     private void removeStock(Product product, Warehouse warehouse, int requested) {
         ProductWarehouseId pwId = new ProductWarehouseId(product.getId(), warehouse.getId());
         ProductWarehouse pw = productWarehouseRepository.findById(pwId).orElse(null);

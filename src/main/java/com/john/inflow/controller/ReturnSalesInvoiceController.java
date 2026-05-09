@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/return-sales-invoices")
+@RequestMapping({"/return-sales-invoices", "/return-invoices"})
 public class ReturnSalesInvoiceController {
 
     private final ReturnSalesInvoiceService returnSalesInvoiceService;
@@ -43,5 +43,11 @@ public class ReturnSalesInvoiceController {
     @GetMapping
     public ResponseEntity<List<ReturnSalesInvoiceResponse>> getAll() {
         return ResponseEntity.ok(returnSalesInvoiceService.getAll());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        returnSalesInvoiceService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
